@@ -1,0 +1,50 @@
+---
+
+- name: run "apt-get" update
+  become: true
+  apt:
+    update_cache: yes
+
+- name: run "apt-get" libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libmicrohttpd-dev
+    - libssl-dev
+    - cmake
+    - build-essential
+    - libhwloc-dev 
+
+- name: git clone xmr-stak
+  git:
+    clone: yes
+    dest: /home/r3lik/xmr-stak
+    repo: 'https://github.com/fireice-uk/xmr-stak.git'
+
+- name: create directories 
+  file:
+    path: /home/r3lik/xmr-stak/build
+    state: directory
+    mode: 0755
+
+- name: run cmake
+  command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
+  args:
+    chdir: /home/r3lik/xmr-stak/build
+
+#- name: copy donate file
+#  copy:
+#    src: /files/donate-level.hpp
+#    dest: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+
+- name: run make install
+  command: make install
+  args:
+    chdir: /home/r3lik/xmr-stak/build
+
+#- name: copy config files
+#  copy: 
+#    src: /files/config.txt
+#    dest: /home/r3lik/xmr-stak/build/bin/config.txt
