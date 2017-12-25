@@ -17,11 +17,21 @@
     - build-essential
     - libhwloc-dev 
 
+- name: check if xmr-stak repo exists
+  stat: 
+    path: /home/r3lik/xmr-stak
+  register: stat_result_xmr_stak
+  
+- debug:
+    msg: "Path exists and is a directory"
+  when: stat_result_xmr_stak.stat.isdir is defined and stat_result_xmr_stak.stat.isdir 
+
 - name: git clone xmr-stak
   git:
     clone: yes
     dest: /home/r3lik/xmr-stak
     repo: 'https://github.com/fireice-uk/xmr-stak.git'
+  when: stat_result_xmr_stak.stat.isdir is defined and stat_result_xmr_stak.stat.isdir == False
 
 - name: create directories 
   file:
@@ -29,10 +39,21 @@
     state: directory
     mode: 0755
 
+- name: check if cpu.txt file exists
+  stat:
+    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
+  register: stat_result_cpu
+
+- name: check if donate file exists
+  stat:
+    path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+  register: stat_result_donate
+
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
   args:
     chdir: /home/r3lik/xmr-stak/build
+  when: stat_result_donate.stat.exists == False
 
 #- name: copy donate file
 #  copy:
@@ -43,6 +64,7 @@
   command: make install
   args:
     chdir: /home/r3lik/xmr-stak/build
+  when: stat_result_cpu.stat.exists == False
 
 #- name: copy config files
 #  copy: 
