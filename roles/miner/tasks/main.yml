@@ -39,15 +39,22 @@
     state: directory
     mode: 0755
 
-#- name: check if cpu.txt file exists
-#  stat:
-#    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
-#  register: stat_result_cpu
+- name: copy donate file
+  copy:
+    src: donate-level.hpp
+    dest: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+    owner: r3lik
+    group: r3lik
+    mode: 0664
 
-#- name: check if donate file exists
-#  stat:
-#    path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
-#  register: stat_result_donate
+- name: check if donate file exists
+  stat:
+    path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+  register: stat_result_donate
+
+- debug:
+    msg: "donate file exists"
+  when: stat_result_donate.stat.exists 
 
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
@@ -69,10 +76,11 @@
     group: r3lik
     mode: 0664
 
-- name: copy donate file
-  copy:
-    src: donate-level.hpp
-    dest: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
-    owner: r3lik
-    group: r3lik
-    mode: 0664
+- name: check if cpu.txt file exists
+  stat:
+    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
+  register: stat_result_cpu
+
+- debug:
+    msg: "cpu.txt exists"
+  when: stat_result_cpu.stat.exists 
