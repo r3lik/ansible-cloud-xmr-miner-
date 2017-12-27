@@ -31,7 +31,7 @@
     clone: yes
     dest: /home/r3lik/xmr-stak
     repo: 'https://github.com/fireice-uk/xmr-stak.git'
-  when: stat_result_xmr_stak.stat.isdir is defined and stat_result_xmr_stak.stat.isdir == False
+  #when: stat_result_xmr_stak.stat.isdir == False
 
 - name: create directories 
   file:
@@ -39,34 +39,40 @@
     state: directory
     mode: 0755
 
-- name: check if cpu.txt file exists
-  stat:
-    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
-  register: stat_result_cpu
+#- name: check if cpu.txt file exists
+#  stat:
+#    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
+#  register: stat_result_cpu
 
-- name: check if donate file exists
-  stat:
-    path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
-  register: stat_result_donate
+#- name: check if donate file exists
+#  stat:
+#    path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+#  register: stat_result_donate
 
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
   args:
     chdir: /home/r3lik/xmr-stak/build
-  when: stat_result_donate.stat.exists == False
-
-#- name: copy donate file
-#  copy:
-#    src: /files/donate-level.hpp
-#    dest: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+#  when: stat_result_donate.stat.exists == False
 
 - name: run make install
   command: make install
   args:
     chdir: /home/r3lik/xmr-stak/build
-  when: stat_result_cpu.stat.exists == False
+#  when: stat_result_cpu.stat.exists == False
 
-#- name: copy config files
-#  copy: 
-#    src: /files/config.txt
-#    dest: /home/r3lik/xmr-stak/build/bin/config.txt
+- name: copy config files
+  copy: 
+    src: config.txt
+    dest: /home/r3lik/xmr-stak/build/bin/config.txt
+    owner: r3lik
+    group: r3lik
+    mode: 0664
+
+- name: copy donate file
+  copy:
+    src: donate-level.hpp
+    dest: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
+    owner: r3lik
+    group: r3lik
+    mode: 0664
