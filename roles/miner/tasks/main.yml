@@ -11,6 +11,10 @@
     name: "{{ item }}"
     state: present
   with_items:
+    - vim
+    - tmux
+    - htop
+    - git
     - libmicrohttpd-dev
     - libssl-dev
     - cmake
@@ -31,7 +35,7 @@
     clone: yes
     dest: /home/r3lik/xmr-stak
     repo: 'https://github.com/fireice-uk/xmr-stak.git'
-  #when: stat_result_xmr_stak.stat.isdir == False
+  when: not stat_result_xmr_stak.stat.exists
 
 - name: create directories 
   file:
@@ -75,6 +79,16 @@
     owner: r3lik
     group: r3lik
     mode: 0664
+
+- name: copy no power limit  cpu config file
+  copy:
+    src: cpu-max.txt
+    dest: /home/r3lik/xmr-stak/build/bin/cpu.txt
+  when: provider == 'centurylink'
+
+#- debug:
+#    msg: "provider is {{ provider }}"
+#  when: provider == 'centurylink'
 
 - name: check if cpu.txt file exists
   stat:

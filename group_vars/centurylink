@@ -1,4 +1,4 @@
 ---
 
 ansible_user: r3lik
-provider: microsoft
+provider: 'centurylink'
