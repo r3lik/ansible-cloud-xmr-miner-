@@ -27,7 +27,7 @@
   register: stat_result_xmr_stak
   
 - debug:
-    msg: "Path exists and is a directory"
+    msg: "xmr-stak path exists and is a directory"
   when: stat_result_xmr_stak.stat.isdir is defined and stat_result_xmr_stak.stat.isdir 
 
 - name: git clone xmr-stak
@@ -72,19 +72,35 @@
     chdir: /home/r3lik/xmr-stak/build
 #  when: stat_result_cpu.stat.exists == False
 
-- name: copy config files
+- name: copy config files for 7777 pool
   copy: 
     src: config.txt
     dest: /home/r3lik/xmr-stak/build/bin/config.txt
     owner: r3lik
     group: r3lik
     mode: 0664
+  when: provider == 'centurylink'
 
-- name: copy no power limit  cpu config file
+- name: copy config files for 5555 pool
+  copy: 
+    src: config-5555.txt
+    dest: /home/r3lik/xmr-stak/build/bin/config.txt
+    owner: r3lik
+    group: r3lik
+    mode: 0664
+  when: provider == 'aruba'
+
+- name: copy no power limit cpu config file
   copy:
     src: cpu-max.txt
     dest: /home/r3lik/xmr-stak/build/bin/cpu.txt
-  when: provider == 'centurylink'
+  when: provider == 'centurylink' 
+
+- name: copy Aruba CPU config file
+  copy:
+    src: cpu-aruba.txt
+    dest: /home/r3lik/xmr-stak/build/bin/cpu.txt
+  when: provider == 'aruba' 
 
 #- debug:
 #    msg: "provider is {{ provider }}"
