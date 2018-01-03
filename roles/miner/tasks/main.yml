@@ -60,6 +60,9 @@
     msg: "donate file exists"
   when: stat_result_donate.stat.exists 
 
+- name: set hugepages=128
+  command: sysctl -w vm.nr_hugepages=128
+
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
   args:
@@ -106,11 +109,11 @@
 #    msg: "provider is {{ provider }}"
 #  when: provider == 'centurylink'
 
-- name: check if cpu.txt file exists
-  stat:
-    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
-  register: stat_result_cpu
+#- name: check if cpu.txt file exists
+#  stat:
+#    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
+#  register: stat_result_cpu
 
-- debug:
-    msg: "cpu.txt exists"
-  when: stat_result_cpu.stat.exists 
+#- debug:
+#    msg: "cpu.txt exists"
+#  when: stat_result_cpu.stat.exists 

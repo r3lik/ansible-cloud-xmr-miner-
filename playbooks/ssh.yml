@@ -1,0 +1,8 @@
+---
+
+# Sets up r3lik user and keys
+- hosts: all
+  roles:
+    - ssh
+  #handlers:
+  #  - include: roles/ssh/handlers/handlers.yml

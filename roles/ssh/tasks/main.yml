@@ -1,0 +1,40 @@
+---
+
+- name: add user "r3lik"
+  user: 
+    name: r3lik
+    shell: /bin/bash
+    state: present
+    groups: sudo
+    password: test
+
+- name: create .ssh directory
+  file: 
+    path: /home/r3lik/.ssh
+    owner: r3lik
+    group: r3lik
+    state: directory
+    mode: 0700
+
+- name: copy r3lik ssh pub key
+  copy:
+    src: id_rsa.pub
+    dest: /home/r3lik/.ssh/authorized_keys
+    owner: r3lik
+    group: r3lik
+    mode: 0600
+
+- name: allow 'sudo' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+  notify: restart ssh
