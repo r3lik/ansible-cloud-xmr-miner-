@@ -84,14 +84,22 @@
     mode: 0664
   when: provider == 'centurylink'
 
-- name: copy config files for 5555 pool
-  copy: 
-    src: config-5555.txt
+#- name: copy config files for 5555 pool
+#  copy: 
+#    src: config-5555.txt
+#    dest: /home/r3lik/xmr-stak/build/bin/config.txt
+#    owner: r3lik
+#    group: r3lik
+#    mode: 0664
+#  when: provider == 'aruba'
+
+- name: copy config file from template
+  template:
+    src: config.j2
     dest: /home/r3lik/xmr-stak/build/bin/config.txt
-    owner: r3lik
-    group: r3lik
-    mode: 0664
-  when: provider == 'aruba'
+
+- debug:
+    msg: host is {{ inventory_hostname }}
 
 - name: copy no power limit cpu config file
   copy:
