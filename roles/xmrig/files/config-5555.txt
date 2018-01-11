@@ -1,3 +1,4 @@
+
 /*
  * pool_address    - Pool address should be in the form "pool.supportxmr.com:3333". Only stratum pools are supported.
  * wallet_address  - Your wallet, or pool login.
@@ -5,14 +6,14 @@
  * use_nicehash    - Limit the nonce to 3 bytes as required by nicehash.
  * use_tls         - This option will make us connect using Transport Layer Security.
  * tls_fingerprint - Server's SHA256 fingerprint. If this string is non-empty then we will check the server's cert against it.
- * pool_weight     - Pool weight is a number telling the miner how important the pool is. Miner will mine mostly at the pool
+ * pool_weight     - Pool weight is a number telling the miner how important the pool is. Miner will mine mostly at the pool 
  *                   with the highest weight, unless the pool fails. Weight must be an integer larger than 0.
  *
  * We feature pools up to 1MH/s. For a more complete list see M5M400's pool list at www.moneropools.com
  */
 "pool_list" :
 [
-        {"pool_address" : "pool.supportxmr.com:{{ mining_port }}", "wallet_address" : "{{ address }}", "pool_password" : "{{ inventory_hostname }}:mike@r3lik.com", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
+	{"pool_address" : "pool.supportxmr.com:5555", "wallet_address" : "452pC7ZyiYJMfP8HcSa3LoNugdbLcamsDDqBmLjiBQtT5yASkqEEi7Kf3svJXvhkBUMD394qNL9DEWm7HXGHg9WqMcdYQnm", "pool_password" : "x", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
 ],
 
 /*
@@ -23,14 +24,14 @@
 
 /*
  * Network timeouts.
- * Because of the way this client is written it doesn't need to constantly talk (keep-alive) to the server to make
- * sure it is there. We detect a buggy / overloaded server by the call timeout. The default values will be ok for
+ * Because of the way this client is written it doesn't need to constantly talk (keep-alive) to the server to make 
+ * sure it is there. We detect a buggy / overloaded server by the call timeout. The default values will be ok for 
  * nearly all cases. If they aren't the pool has most likely overload issues. Low call timeout values are preferable -
  * long timeouts mean that we waste hashes on potentially stale jobs. Connection report will tell you how long the
  * server usually takes to process our calls.
  *
  * call_timeout - How long should we wait for a response from the server before we assume it is dead and drop the connection.
- * retry_time   - How long should we wait before another connection attempt.
+ * retry_time	- How long should we wait before another connection attempt.
  *                Both values are in seconds.
  * giveup_limit - Limit how many times we try to reconnect to the pool. Zero means no limit. Note that stak miners
  *                don't mine while the connection is lost, so your computer's power usage goes down to idle.
@@ -54,7 +55,7 @@
  *
  * print_motd    - Display messages from your pool operator in the hashrate result.
  */
-"verbose_level" : 4,
+"verbose_level" : 3,
 "print_motd" : true,
 
 /*
@@ -170,12 +171,13 @@
  *
  * http_login - Login. Empty login disables authentication.
  * http_pass  - Password.
- */
+ */ 
 "http_login" : "",
 "http_pass" : "",
-
+ 
 /*
  * prefer_ipv4 - IPv6 preference. If the host is available on both IPv4 and IPv6 net, which one should be choose?
  *               This setting will only be needed in 2020's. No need to worry about it now.
  */
 "prefer_ipv4" : true,
+

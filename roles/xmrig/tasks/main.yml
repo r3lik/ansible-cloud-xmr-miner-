@@ -1,0 +1,88 @@
+---
+- name: add gcc7 repo from PPA
+  become: true
+  apt_repository:
+    repo: ppa:jonathonf/gcc-7.1
+
+- name: run "apt-get" update
+  become: true
+  apt:
+    update_cache: yes
+
+- name: run "apt-get" git build-essential cmake libuv1-dev libmicrohttpd-dev htop gcc-7 g++-7 vim tmux cpulimit
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - vim
+    - tmux
+    - htop
+    - git
+    - libmicrohttpd-dev
+    - libuv1-dev
+    - cmake
+    - build-essential
+    - gcc-7
+    - g++-7 
+    - cpulimit
+
+- name: check if xmrig repo exists
+  stat: 
+    path: /home/r3lik/xmrig
+  register: stat_result_xmrig
+  
+- debug:
+    msg: "xmrig path exists and is a directory"
+  when: stat_result_xmrig.stat.isdir is defined and stat_result_xmrig.stat.isdir 
+
+- name: git clone xmrig
+  git:
+    clone: yes
+    dest: /home/r3lik/xmrig
+    repo: 'https://github.com/xmrig/xmrig.git'
+  when: not stat_result_xmrig.stat.exists
+
+- name: create directories 
+  file:
+    path: /home/r3lik/xmrig/build
+    state: directory
+    mode: 0755
+
+- name: copy donate file
+  copy:
+    src: donate.h
+    dest: /home/r3lik/xmrig/src/donate.h
+    owner: r3lik
+    group: r3lik
+    mode: 0664
+
+- name: check if donate file exists
+  stat:
+    path: /home/r3lik/xmrig/src/donate.h
+  register: stat_result_donate
+
+- debug:
+    msg: "donate file exists"
+  when: stat_result_donate.stat.exists 
+
+- name: set hugepages=128
+  become: true
+  command: sysctl -w vm.nr_hugepages=128
+
+- name: run cmake
+  command: cmake .. -DCMAKE_C_COMPILER=gcc-7 -DCMAKE_CXX_COMPILER=g++-7 -DWITH_AEON=OFF -DWITH_HTTPD=OFF
+  args:
+    chdir: /home/r3lik/xmrig/build
+
+- name: run make
+  command: make
+  args:
+    chdir: /home/r3lik/xmrig/build
+
+- name: copy config file from template
+  template:
+    src: config.j2
+    dest: /home/r3lik/xmrig/src/config.json
+  tags:
+    - config

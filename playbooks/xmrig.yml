@@ -1,0 +1,6 @@
+---
+
+# Installs the XMRIG miner goodies
+- hosts: all
+  roles:
+    - xmrig

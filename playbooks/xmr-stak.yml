@@ -3,4 +3,4 @@
 # Installs the XMR miner goodies
 - hosts: all
   roles:
-    - miner
+    - xmr-stak
