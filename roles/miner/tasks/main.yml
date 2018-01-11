@@ -20,6 +20,7 @@
     - cmake
     - build-essential
     - libhwloc-dev 
+    - cpulimit
 
 - name: check if xmr-stak repo exists
   stat: 
@@ -60,20 +61,19 @@
     msg: "donate file exists"
   when: stat_result_donate.stat.exists 
 
-- name: set hugepages=128
-  command: sysctl -w vm.nr_hugepages=128
+# Not necessary? 
+#- name: set hugepages=128
+#  command: sysctl -w vm.nr_hugepages=128
 
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
   args:
     chdir: /home/r3lik/xmr-stak/build
-#  when: stat_result_donate.stat.exists == False
 
 - name: run make install
   command: make install
   args:
     chdir: /home/r3lik/xmr-stak/build
-#  when: stat_result_cpu.stat.exists == False
 
 - name: copy config files for 7777 pool
   copy: 
@@ -84,22 +84,12 @@
     mode: 0664
   when: provider == 'centurylink'
 
-#- name: copy config files for 5555 pool
-#  copy: 
-#    src: config-5555.txt
-#    dest: /home/r3lik/xmr-stak/build/bin/config.txt
-#    owner: r3lik
-#    group: r3lik
-#    mode: 0664
-#  when: provider == 'aruba'
-
 - name: copy config file from template
   template:
     src: config.j2
     dest: /home/r3lik/xmr-stak/build/bin/config.txt
-
-- debug:
-    msg: host is {{ inventory_hostname }}
+  tags:
+    - config
 
 - name: copy no power limit cpu config file
   copy:
@@ -112,16 +102,3 @@
     src: cpu-aruba.txt
     dest: /home/r3lik/xmr-stak/build/bin/cpu.txt
   when: provider == 'aruba' 
-
-#- debug:
-#    msg: "provider is {{ provider }}"
-#  when: provider == 'centurylink'
-
-#- name: check if cpu.txt file exists
-#  stat:
-#    path: /home/r3lik/xmr-stak/build/bin/cpu.txt
-#  register: stat_result_cpu
-
-#- debug:
-#    msg: "cpu.txt exists"
-#  when: stat_result_cpu.stat.exists 

@@ -1,3 +1,4 @@
 ---
 
 provider: aruba
+mining_port: 3333
