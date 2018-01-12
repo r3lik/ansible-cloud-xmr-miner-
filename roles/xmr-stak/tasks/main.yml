@@ -1,9 +1,19 @@
 ---
 
+# Sometimes uses a lot of CPU on small VPS instances
+- name: stop fail2ban
+  become: true
+  service:
+    name: fail2ban
+    state: stopped
+ # become: true
+ # command: service fail2ban stop
+
 - name: run "apt-get" update
   become: true
   apt:
     update_cache: yes
+    cache_valid_time: 3600
 
 - name: run "apt-get" libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev
   become: true
@@ -61,9 +71,9 @@
     msg: "donate file exists"
   when: stat_result_donate.stat.exists 
 
-# Not necessary? 
-#- name: set hugepages=128
-#  command: sysctl -w vm.nr_hugepages=128
+- name: set hugepages=128
+  become: true
+  command: sysctl -w vm.nr_hugepages=128
 
 - name: run cmake
   command: cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF
