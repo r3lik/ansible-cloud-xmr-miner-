@@ -1,6 +1,0 @@
----
-
-ansible_user: r3lik
-email: 'mike@r3lik.com'
-pool: 'pool.supportxmr.com'
-address: '452pC7ZyiYJMfP8HcSa3LoNugdbLcamsDDqBmLjiBQtT5yASkqEEi7Kf3svJXvhkBUMD394qNL9DEWm7HXGHg9WqMcdYQnm'

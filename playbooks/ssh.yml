@@ -4,5 +4,3 @@
 - hosts: all
   roles:
     - ssh
-  #handlers:
-  #  - include: roles/ssh/handlers/handlers.yml
