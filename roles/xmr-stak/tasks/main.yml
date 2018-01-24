@@ -63,6 +63,15 @@
     group: r3lik
     mode: 0664
 
+- name: copy "limits.conf" file to set memlock size
+  become: true
+  copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    owner: root
+    group: root
+    mode: 0664
+
 - name: check if donate file exists
   stat:
     path: /home/r3lik/xmr-stak/xmrstak/donate-level.hpp
