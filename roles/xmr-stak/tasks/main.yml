@@ -1,13 +1,13 @@
 ---
 
-# Sometimes uses a lot of CPU on small VPS instances
-- name: stop fail2ban
-  become: true
-  service:
-    name: fail2ban
-    state: stopped
- # become: true
- # command: service fail2ban stop
+## Sometimes uses a lot of CPU on small VPS instances
+#- name: stop fail2ban
+#  become: true
+#  service:
+#    name: fail2ban
+#    state: stopped
+# # become: true
+# # command: service fail2ban stop
 
 - name: run "apt-get" update
   become: true
@@ -15,7 +15,7 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: run "apt-get" libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev
+- name: run "apt-get" packages 
   become: true
   apt:
     name: "{{ item }}"
@@ -28,6 +28,7 @@
     - libmicrohttpd-dev
     - libssl-dev
     - cmake
+    - libnuma-dev
     - build-essential
     - libhwloc-dev 
     - cpulimit
